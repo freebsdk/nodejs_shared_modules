@@ -19,7 +19,22 @@ var valueWithFallback = (source_val, fallback_val) => {
 
 
 
+
+var trace = (filename, line, err) => {
+
+    var msg = "["+filename+"] (line:"+line+") ";
+    if(!isNullOrEmpty(err)) {
+        msg += "> "+err;
+    }
+
+    console.error(err);
+}
+
+
+
+
 module.exports = {
     isNullOrEmpty : isNullOrEmpty,
-    valueWithFallback : valueWithFallback
+    valueWithFallback : valueWithFallback,
+    trace : trace
 }

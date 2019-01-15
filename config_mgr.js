@@ -3,6 +3,14 @@ var fs = require('fs');
 
 
 global.config = {};
+global.argv = {};
+
+
+
+
+var readConsoleParams = () => {
+    global.argv = process.argv.slice(2);
+}
 
 
 
@@ -63,7 +71,11 @@ var getJsonObj = (key) => {
 
 
 
+
+
+
 module.exports = {
+    readConsoleParams : readConsoleParams,
     loadFromFile : loadFromFile,
     getString : getString,
     getNumber : getNumber,

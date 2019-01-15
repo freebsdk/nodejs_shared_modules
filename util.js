@@ -19,7 +19,28 @@ var valueWithFallback = (source_val, fallback_val) => {
 
 
 
+
+var isValidPort = (port) => {
+    if(port >= 1 && port <= 65535) return true;
+    return false;
+}
+
+
+
+
+var trace = (filename, line, msg) =>{
+    var show_msg = "[TRACE] "+filename+" (line: "+line+")";
+    if(isNullOrEmpty(msg) == false) {
+        show_msg += " > "+msg;
+    }
+    Console.error(show_msg);
+}
+
+
+
 module.exports = {
     isNullOrEmpty : isNullOrEmpty,
-    valueWithFallback : valueWithFallback
+    valueWithFallback : valueWithFallback,
+    isValidPort : isValidPort,
+    trace : trace
 }

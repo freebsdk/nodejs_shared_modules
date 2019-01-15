@@ -27,11 +27,6 @@ var valueWithFallback = (source_val, fallback_val) => {
 
 
 
-var isValidPort = (port) => {
-    if(port >= 1 && port <= 65535) return true;
-    return false;
-}
-
 
 
 
@@ -45,7 +40,7 @@ var trace = (filename, line, msg) =>{
 
 
 
-
+//os
 var asyncSleep = function(msec) {
     return new Promise((resolve) =>{
         setTimeout(()=>{
@@ -56,7 +51,7 @@ var asyncSleep = function(msec) {
 
 
 
-
+//os
 var syncSleep = function(msec) {
     if(msec <= 0) return;
     var st = new Date().getTime();
@@ -69,8 +64,17 @@ var syncSleep = function(msec) {
 
 
 
+//network
+var isValidPort = (port) => {
+    if(port >= 1 && port <= 65535) return true;
+    return false;
+}
 
 
+
+
+
+//network
 var isPrivateIP = function(ip_str) {
 
     var tok = ip_str.split(".");
@@ -101,7 +105,7 @@ var isPrivateIP = function(ip_str) {
 
 
 
-
+//network
 var getPrivateIPList = function() {
     var interfaces = os.networkInterfaces();
     var addresses = [];
@@ -125,10 +129,14 @@ var getPrivateIPList = function() {
 module.exports = {
     isNullOrEmpty : isNullOrEmpty,
     valueWithFallback : valueWithFallback,
-    isValidPort : isValidPort,
     trace : trace,
+
+    //os
     asyncSleep : asyncSleep,
     syncSleep : syncSleep,
+    
+    //network
+    isValidPort : isValidPort,
     isPrivateIP : isPrivateIP,
     getPrivateIPList : getPrivateIPList
 }

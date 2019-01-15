@@ -27,9 +27,6 @@ var valueWithFallback = (source_val, fallback_val) => {
 
 
 
-
-
-
 var trace = (filename, line, msg) =>{
     var show_msg = "[TRACE] "+filename+" (line: "+line+")";
     if(isNullOrEmpty(msg) == false) {

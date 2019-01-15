@@ -31,8 +31,8 @@ var trace = (filename, line, msg) =>{
     var show_msg = "[TRACE] "+filename+" (line: "+line+")";
     if(isNullOrEmpty(msg) == false) {
         show_msg += " > "+msg;
-    }
-    Console.error(show_msg);
+    }console.error(show_msg);
+    
 }
 
 

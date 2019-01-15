@@ -1,3 +1,7 @@
+//
+// Created by freebsdk. 
+//
+
 require('magic-globals');
 require('console-stamp')(console, '[yyyy-mm-dd HH:MM:ss.l]');
 
@@ -31,8 +35,8 @@ var trace = (filename, line, msg) =>{
     var show_msg = "[TRACE] "+filename+" (line: "+line+")";
     if(isNullOrEmpty(msg) == false) {
         show_msg += " > "+msg;
-    }console.error(show_msg);
-    
+    }
+    console.error(show_msg);
 }
 
 

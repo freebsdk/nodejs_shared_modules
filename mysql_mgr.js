@@ -1,6 +1,10 @@
-var mysql = require('mysql');
-var config_mgr = require('./config_mgr.js');
-var util = require('./util.js');
+//
+// Created by freebsdk. 
+//
+
+var Mysql = require('mysql');
+var ConfigMgr = require('./config_mgr.js');
+var Util = require('./util.js');
 
 
 
@@ -18,7 +22,7 @@ var dbh_pool = {};
 
 var open = (db_key) => {
 
-    var cfg_info = config_mgr.getJsonObj(db_key);
+    var cfg_info = ConfigMgr.getJsonObj(db_key);
     if(cfg_info == null) return { error : "not_exist_cfg" };
 
     if(isNullOrEmpty(cfg_info.host)) return { error : "not_exist_cfg" };
@@ -34,19 +38,19 @@ var open = (db_key) => {
     set_cfg['connectionLimit'] = (util.isNullOrEmpty(cfg_info.connection_limit)) ? DEFAULT_CONNECTION_LIMIT : Number(cfg_info.connection_limit);
 
     //optional parameters
-    if(util.isNullOrEmpty(cfg_info.connection_timeout) == false) {
+    if(Util.isNullOrEmpty(cfg_info.connection_timeout) == false) {
         set_cfg['connectTimeout'] = cfg_info.connection_timeout;
     }
 
-    if(util.isNullOrEmpty(cfg_info.multiple_statement) == false) {
+    if(Util.isNullOrEmpty(cfg_info.multiple_statement) == false) {
         set_cfg['multipleStatements'] = cfg_info.multiple_statement;
     }
 
-    if(util.isNullOrEmpty(cfg_info.timezone) == false) {
+    if(Util.isNullOrEmpty(cfg_info.timezone) == false) {
         set_cfg['timezone'] = cfg_info.timezone;
     }
 
-    var dbh = mysql.createPool(set_cfg);
+    var dbh = Mysql.createPool(set_cfg);
     dbh_pool[db_key] = dbh;
 
     return { error : "ok" }

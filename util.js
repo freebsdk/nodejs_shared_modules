@@ -67,6 +67,7 @@ var syncSleep = function(msec) {
 
 //network
 var isValidPort = (port) => {
+    if(isNullOrEmpty(port)) return false;
     if(port >= 1 && port <= 65535) return true;
     return false;
 }

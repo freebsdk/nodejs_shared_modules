@@ -18,40 +18,30 @@ var dbh_pool = {};
 
 
 
-
-
-var open = (db_key) => {
-
-    var cfg_info = ConfigMgr.getJsonObj(db_key);
-    if(cfg_info == null) return { error : "not_exist_cfg" };
-
-    if(isNullOrEmpty(cfg_info.host)) return { error : "not_exist_cfg" };
-    if(isNullOrEmpty(cfg_info.user)) return { error : "not_exist_cfg" };
-    if(isNullOrEmpty(cfg_info.password)) return { error : "not_exist_cfg" };
-    
-    var set_cfg = {};
-    set_cfg['database'] = db_key;
-    set_cfg['host'] = cfg_info.host; 
-    set_cfg['user'] = cfg_info.user;
-    set_cfg['password'] = cfg_info.password;
-    set_cfg['port'] = (util.isNullOrEmpty(cfg_info.port)) ? DEFAULT_MYSQL_PORT : Number(cfg_info.port);
-    set_cfg['connectionLimit'] = (util.isNullOrEmpty(cfg_info.connection_limit)) ? DEFAULT_CONNECTION_LIMIT : Number(cfg_info.connection_limit);
+var open = (dsn) => {
 
     //optional parameters
-    if(Util.isNullOrEmpty(cfg_info.connection_timeout) == false) {
-        set_cfg['connectTimeout'] = cfg_info.connection_timeout;
+    if(!Util.isNullOrEmpty(dsn.connectionTimeout)) {
+        dsn['connectTimeout'] = dsn.connectionTimeout;
     }
 
-    if(Util.isNullOrEmpty(cfg_info.multiple_statement) == false) {
-        set_cfg['multipleStatements'] = cfg_info.multiple_statement;
+    if(!Util.isNullOrEmpty(dsn.multipleStatement)) {
+        dsn['multipleStatements'] = dsn.multipleStatement;
     }
 
-    if(Util.isNullOrEmpty(cfg_info.timezone) == false) {
-        set_cfg['timezone'] = cfg_info.timezone;
+    if(Util.isNullOrEmpty(dsn.timezone) == false) {
+        dsn['timezone'] = dsn.timezone;
     }
 
-    var dbh = Mysql.createPool(set_cfg);
-    dbh_pool[db_key] = dbh;
+    try {
+        var dbh = Mysql.createPool(dsn);
+    }
+    catch(error) {
+        console.error(error);
+        return { error : 'db_connect_fail' }
+    }
+    
+    dbh_pool[dsn.database] = dbh;
 
     return { error : "ok" }
 }

@@ -66,13 +66,19 @@ var getNumber = (key) => {
 
 
 var getJsonObj = (key) => {
-    var obj = getValue(key);
+    var obj = getString(key);
     if(obj != null) {
         return JSON.parse(obj);
     }
     return null;
 }
 
+
+
+
+var getValue = (key) => {
+    return global.config[key];
+}
 
 
 
@@ -83,5 +89,6 @@ module.exports = {
     loadFromFile : loadFromFile,
     getString : getString,
     getNumber : getNumber,
-    getJsonObj : getJsonObj
+    getJsonObj : getJsonObj,
+    getValue : getValue
 }

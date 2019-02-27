@@ -3,6 +3,7 @@
 //
 
 require('magic-globals');
+var Moment = require('moment');
 require('console-stamp')(console, '[yyyy-mm-dd HH:MM:ss.l]');
 
 
@@ -38,6 +39,50 @@ var trace = (filename, line, msg) =>{
     }
     console.error(show_msg);
 }
+
+
+
+
+var getDateStr = () => {
+    var dt = new Date();
+    return Moment(dt).format('YYYY-MM-DD');
+}
+
+
+
+
+
+var getTimeStr = () => {
+    var dt = new Date();
+    return Moment(dt).format('HH:mm:ss');
+}
+
+
+
+
+
+var getDateTimeStr = () => {
+    var dt = new Date();
+    return Moment(dt).format('YYYY-MM-DD HH:mm:ss');
+}
+
+
+
+
+var timeLog = (msg) => {
+    var show_msg = "["+getDateTimeStr()+"] "+msg;
+    console.log(show_msg);
+}
+
+
+
+
+var timeError = (filename, line, msg) => {
+    var show_msg = "["+getDateTimeStr()+"] "+filename+" (line:"+line+") "+msg;
+    console.error(show_msg);
+}
+
+
 
 
 
@@ -131,13 +176,22 @@ var getPrivateIPList = function() {
 module.exports = {
     isNullOrEmpty : isNullOrEmpty,
     valueWithFallback : valueWithFallback,
-    trace : trace,
 
-    //os
+    // console log
+    trace : trace,
+    timeLog : timeLog,
+    timeError : timeError,
+
+    // os
     asyncSleep : asyncSleep,
     syncSleep : syncSleep,
     
-    //network
+    // date
+    getDateStr : getDateStr,
+    getTimeStr : getTimeStr,
+    getDateTimeStr : getDateTimeStr,
+
+    // network
     isValidPort : isValidPort,
     isPrivateIP : isPrivateIP,
     getPrivateIPList : getPrivateIPList

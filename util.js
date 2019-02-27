@@ -172,10 +172,16 @@ var getPrivateIPList = function() {
 
 
 
+function seperate3Digit(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  }
+
+
 
 module.exports = {
     isNullOrEmpty : isNullOrEmpty,
     valueWithFallback : valueWithFallback,
+    seperate3Digit : seperate3Digit,
 
     // console log
     trace : trace,

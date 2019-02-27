@@ -60,14 +60,14 @@ var exec = (db_key, query, value) => {
 
         the_pool.getConnection((err, connection) => {
             if(err != null) {
-                util_mod.trace(__filename, __line, err);
+                Util.timeError(__filename, __line, err);
                 reject({error : err});
                 return;
             }
             else {
                 connection.query(query, value, (err, rows) => {
                     if(err != null) {
-                        util_mod.trace(__filename, __line, err);
+                        Util.timeError(__filename, __line, err);
                         reject({error :err});
                         return;
                     }

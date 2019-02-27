@@ -76,6 +76,8 @@ var getJsonObj = (key) => {
 
 
 
+
+
 var getValue = (key) => {
     return global.config[key];
 }
@@ -84,11 +86,48 @@ var getValue = (key) => {
 
 
 
+
+var initDBPool = (dsn_key) => {
+    var dsn = ConfigMgr.getValue(dsn_key);
+    
+    try {
+        MySQLMgr.open(dsn);
+    }
+    catch(error) {
+        console.error(error);
+        process.exit(-2);
+    }
+}
+
+
+
+
+
+var loadConfigFromDB = async() => {
+    var records = await MySQLMgr.exec("upbit_autotrade", "SELECT keyname,`value` FROM tbl_common_cfg", []);
+
+    for(var i=0; i<records.rows.length;i++) {
+        var record = records.rows[i];
+        
+        // Do not replace properties from the config file.
+        if(Util.isNullOrEmpty(global.config[record.keyname])) {
+            global.config[record.keyname] = record.value;
+        }
+    }
+}
+
+
+
+
 module.exports = {
-    readConsoleParams : readConsoleParams,
-    loadFromFile : loadFromFile,
+    
     getString : getString,
     getNumber : getNumber,
     getJsonObj : getJsonObj,
-    getValue : getValue
+    getValue : getValue,
+    initDBPool : initDBPool,
+    
+    readConsoleParams : readConsoleParams,
+    loadFromFile : loadFromFile,
+    loadConfigFromDB : loadConfigFromDB
 }

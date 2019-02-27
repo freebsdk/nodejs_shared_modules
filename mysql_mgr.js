@@ -14,7 +14,7 @@ const DEFAULT_CONNECTION_LIMIT = 5;
 
 
 
-var dbh_pool = {};
+global.dbh_pool = {};
 
 
 
@@ -41,7 +41,7 @@ var open = (dsn) => {
         return { error : 'db_connect_fail' }
     }
     
-    dbh_pool[dsn.database] = dbh;
+    global.dbh_pool[dsn.database] = dbh;
 
     return { error : "ok" }
 }
@@ -52,8 +52,8 @@ var open = (dsn) => {
 
 var exec = (db_key, query, value) => {
     return new Promise((resolve, reject) => {
-        var the_handle = dbh_pool[db_key];
-        if(typeof the_handle == 'undefined') {
+        var the_pool = global.dbh_pool[db_key];
+        if(typeof the_pool == 'undefined') {
             reject({error : 'not_exist_handle'});
             return;
         }

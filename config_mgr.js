@@ -3,6 +3,8 @@
 //
 
 var fs = require('fs');
+var MySQLMgr = require('./mysql_mgr.js');
+var Util = require('./util.js');
 
 
 
@@ -88,7 +90,7 @@ var getValue = (key) => {
 
 
 var initDBPool = (dsn_key) => {
-    var dsn = ConfigMgr.getValue(dsn_key);
+    var dsn = getValue(dsn_key);
     
     try {
         MySQLMgr.open(dsn);

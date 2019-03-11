@@ -91,7 +91,11 @@ var getValue = (key) => {
 
 var initDBPool = (dsn_key) => {
     var dsn = getValue(dsn_key);
-    
+    if(typeof dsn == 'undefined') {
+        console.error("Not defined config property : "+dsn_key);
+        process.exit(-2);
+    }
+
     try {
         MySQLMgr.open(dsn);
     }

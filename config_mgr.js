@@ -14,14 +14,14 @@ global.argv = {};
 
 
 
-var readConsoleParams = () => {
+var ReadConsoleParams = () => {
     global.argv = process.argv.slice(2);
 }
 
 
 
 
-var loadFromFile = (path) => {
+var LoadFromFile = (path) => {
     try {
         var data = fs.readFileSync(path,'utf8');
         global.config = JSON.parse(data);
@@ -42,7 +42,7 @@ var loadFromFile = (path) => {
 
 
 
-var getString = (key) => {
+var GetString = (key) => {
     try {
         var res = global.config[key];
         if(typeof res == 'undefined') return null;
@@ -56,9 +56,9 @@ var getString = (key) => {
 
 
 
-var getNumber = (key) => {
-    var str = getString(key);
-    if(str != null) return Number(str);
+var GetInt = (key) => {
+    var str = GetString(key);
+    if(str != null) return parseInt(str);
     
     return null;
 }
@@ -67,8 +67,20 @@ var getNumber = (key) => {
 
 
 
-var getJsonObj = (key) => {
-    var obj = getString(key);
+var GetFloat = (key) => {
+    var str = GetString(key);
+    if(str != null) return parseFloat(str);
+    
+    return null;
+}
+
+
+
+
+
+
+var GetJsonObj = (key) => {
+    var obj = GetString(key);
     if(obj != null) {
         return JSON.parse(obj);
     }
@@ -80,7 +92,7 @@ var getJsonObj = (key) => {
 
 
 
-var getValue = (key) => {
+var GetValue = (key) => {
     return global.config[key];
 }
 
@@ -89,8 +101,8 @@ var getValue = (key) => {
 
 
 
-var initDBPool = (dsn_key) => {
-    var dsn = getValue(dsn_key);
+var InitDBPool = (dsn_key) => {
+    var dsn = GetValue(dsn_key);
     if(typeof dsn == 'undefined') {
         console.error("Not defined config property : "+dsn_key);
         process.exit(-2);
@@ -109,8 +121,8 @@ var initDBPool = (dsn_key) => {
 
 
 
-var loadConfigFromDB = async() => {
-    var records = await MySQLMgr.exec("upbit_autotrade", "SELECT keyname,`value` FROM tbl_common_cfg", []);
+var LoadConfigFromDB = async(config_db_name) => {
+    var records = await MySQLMgr.exec(config_db_name, "SELECT keyname,`value` FROM tbl_common_cfg", []);
 
     for(var i=0; i<records.rows.length;i++) {
         var record = records.rows[i];
@@ -127,13 +139,14 @@ var loadConfigFromDB = async() => {
 
 module.exports = {
     
-    getString : getString,
-    getNumber : getNumber,
-    getJsonObj : getJsonObj,
-    getValue : getValue,
-    initDBPool : initDBPool,
+    GetString : GetString,
+    GetInt : GetInt,
+    GetFloat : GetFloat,
+    GetJsonObj : GetJsonObj,
+    GetValue : GetValue,
+    InitDBPool : InitDBPool,
     
-    readConsoleParams : readConsoleParams,
-    loadFromFile : loadFromFile,
-    loadConfigFromDB : loadConfigFromDB
+    ReadConsoleParams : ReadConsoleParams,
+    LoadFromFile : LoadFromFile,
+    LoadConfigFromDB : LoadConfigFromDB
 }

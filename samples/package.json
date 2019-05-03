@@ -1,0 +1,33 @@
+{
+  "name": "sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freebsdk/bari_radar_24.git"
+  },
+  "author": "freebsdk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/freebsdk/bari_radar_24/issues"
+  },
+  "homepage": "https://github.com/freebsdk/bari_radar_24#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "console-stamp": "^0.2.7",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.16.4",
+    "https": "^1.0.0",
+    "magic-globals": "^0.9.1",
+    "moment": "^2.24.0",
+    "mysql": "^2.17.1",
+    "redis": "^2.8.0",
+    "request": "^2.88.0",
+    "socket.io": "^2.2.0"
+  }
+}
+

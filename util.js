@@ -10,7 +10,7 @@ require('console-stamp')(console, '[yyyy-mm-dd HH:MM:ss.l]');
 
 
 
-var isNullOrEmpty = (x) => {
+var IsNullOrEmpty = (x) => {
     if(typeof x == 'undefined') return true;
     if(x == null) return true;
     if(x.length == 0) return true;
@@ -21,8 +21,8 @@ var isNullOrEmpty = (x) => {
 
 
 
-var valueWithFallback = (source_val, fallback_val) => {
-    if(isNullOrEmpty(source_val)) {
+var ValueWithFallback = (source_val, fallback_val) => {
+    if(IsNullOrEmpty(source_val)) {
         return fallback_val;
     }
     return source_val;
@@ -32,9 +32,9 @@ var valueWithFallback = (source_val, fallback_val) => {
 
 
 
-var trace = (filename, line, msg) =>{
+var Trace = (filename, line, msg) =>{
     var show_msg = "[TRACE] "+filename+" (line: "+line+")";
-    if(isNullOrEmpty(msg) == false) {
+    if(IsNullOrEmpty(msg) == false) {
         show_msg += " > "+msg;
     }
     console.error(show_msg);
@@ -43,7 +43,7 @@ var trace = (filename, line, msg) =>{
 
 
 
-var getDateStr = () => {
+var GetDateStr = () => {
     var dt = new Date();
     return Moment(dt).format('YYYY-MM-DD');
 }
@@ -52,7 +52,7 @@ var getDateStr = () => {
 
 
 
-var getTimeStr = () => {
+var GetTimeStr = () => {
     var dt = new Date();
     return Moment(dt).format('HH:mm:ss');
 }
@@ -61,7 +61,7 @@ var getTimeStr = () => {
 
 
 
-var getDateTimeStr = () => {
+var GetDateTimeStr = () => {
     var dt = new Date();
     return Moment(dt).format('YYYY-MM-DD HH:mm:ss');
 }
@@ -69,16 +69,16 @@ var getDateTimeStr = () => {
 
 
 
-var timeLog = (msg) => {
-    var show_msg = "["+getDateTimeStr()+"] "+msg;
+var TimeLog = (msg) => {
+    var show_msg = "["+GetDateTimeStr()+"] "+msg;
     console.log(show_msg);
 }
 
 
 
 
-var timeError = (filename, line, msg) => {
-    var show_msg = "["+getDateTimeStr()+"] "+filename+" (line:"+line+") "+msg;
+var TimeError = (filename, line, msg) => {
+    var show_msg = "["+GetDateTimeStr()+"] "+filename+" (line:"+line+") "+msg;
     console.error(show_msg);
 }
 
@@ -87,7 +87,7 @@ var timeError = (filename, line, msg) => {
 
 
 //os
-var asyncSleep = function(msec) {
+var AsyncSleep = function(msec) {
     return new Promise((resolve) =>{
         setTimeout(()=>{
             resolve();
@@ -98,7 +98,7 @@ var asyncSleep = function(msec) {
 
 
 //os
-var syncSleep = function(msec) {
+var SyncSleep = function(msec) {
     if(msec <= 0) return;
     var st = new Date().getTime();
     for(;;) {
@@ -111,8 +111,8 @@ var syncSleep = function(msec) {
 
 
 //network
-var isValidPort = (port) => {
-    if(isNullOrEmpty(port)) return false;
+var IsValidPort = (port) => {
+    if(IsNullOrEmpty(port)) return false;
     if(port >= 1 && port <= 65535) return true;
     return false;
 }
@@ -122,7 +122,7 @@ var isValidPort = (port) => {
 
 
 //network
-var isPrivateIP = function(ip_str) {
+var IsPrivateIP = function(ip_str) {
 
     var tok = ip_str.split(".");
     if(tok.length != 4) return false;
@@ -153,7 +153,7 @@ var isPrivateIP = function(ip_str) {
 
 
 //network
-var getPrivateIPList = function() {
+var GetPrivateIPList = function() {
     var interfaces = os.networkInterfaces();
     var addresses = [];
 
@@ -161,7 +161,7 @@ var getPrivateIPList = function() {
         for (var k2 in interfaces[k]) {
             var address = interfaces[k][k2];
             if (address.family === 'IPv4' && !address.internal) {
-                if(isPrivateIP(address.address) == true) addresses.push(address.address);
+                if(IsPrivateIP(address.address) == true) addresses.push(address.address);
             }
         }
     }
@@ -172,33 +172,33 @@ var getPrivateIPList = function() {
 
 
 
-function seperate3Digit(num) {
+function Seperate3Digit(num) {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   }
 
 
 
 module.exports = {
-    isNullOrEmpty : isNullOrEmpty,
-    valueWithFallback : valueWithFallback,
-    seperate3Digit : seperate3Digit,
+    IsNullOrEmpty : IsNullOrEmpty,
+    ValueWithFallback : ValueWithFallback,
+    Seperate3Digit : Seperate3Digit,
 
     // console log
-    trace : trace,
-    timeLog : timeLog,
-    timeError : timeError,
+    Trace : Trace,
+    TimeLog : TimeLog,
+    TimeError : TimeError,
 
     // os
-    asyncSleep : asyncSleep,
-    syncSleep : syncSleep,
+    AsyncSleep : AsyncSleep,
+    SyncSleep : SyncSleep,
     
     // date
-    getDateStr : getDateStr,
-    getTimeStr : getTimeStr,
-    getDateTimeStr : getDateTimeStr,
+    GetDateStr : GetDateStr,
+    GetTimeStr : GetTimeStr,
+    GetDateTimeStr : GetDateTimeStr,
 
     // network
-    isValidPort : isValidPort,
-    isPrivateIP : isPrivateIP,
-    getPrivateIPList : getPrivateIPList
+    IsValidPort : IsValidPort,
+    IsPrivateIP : IsPrivateIP,
+    GetPrivateIPList : GetPrivateIPList
 }

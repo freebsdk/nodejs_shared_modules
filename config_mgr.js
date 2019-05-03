@@ -9,13 +9,15 @@ var Util = require('./util.js');
 
 
 global.config = {};
-global.argv = {};
 
 
 
 
-var ReadConsoleParams = () => {
-    global.argv = process.argv.slice(2);
+var LoadConsoleParamsIntoConfig = () => {
+    var argv = process.argv.slice(2);
+    global.config["argv"] = argv;
+    
+    return argv;
 }
 
 
@@ -24,7 +26,11 @@ var ReadConsoleParams = () => {
 var LoadFromFile = (path) => {
     try {
         var data = fs.readFileSync(path,'utf8');
-        global.config = JSON.parse(data);
+        var fileConfig = JSON.parse(data); 
+
+        for(var key in fileConfig) {
+            global.config[key] = fileConfig[key];
+        }
     }
     catch(err) {
         if(err.code === 'ENOENT') {
@@ -146,7 +152,7 @@ module.exports = {
     GetValue : GetValue,
     InitDBPool : InitDBPool,
     
-    ReadConsoleParams : ReadConsoleParams,
+    LoadConsoleParamsIntoConfig : LoadConsoleParamsIntoConfig,
     LoadFromFile : LoadFromFile,
     LoadConfigFromDB : LoadConfigFromDB
 }

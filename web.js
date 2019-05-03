@@ -1,9 +1,9 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const request = require('request');
-const https = require('https');
-const util = require('./util.js');
+var express = require('express');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var request = require('request');
+var https = require('https');
+var Util = require('./util.js');
 
 
 
@@ -23,7 +23,7 @@ var initExpress = (register_packet_router_func) => {
     global.app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
     global.app.use(cookieParser());
 
-	register_packet_router_func();
+	register_packet_router_func(global.app);
 
     //404 handler
     global.app.use(function (req, res, next) {
@@ -84,15 +84,15 @@ var openHttpService = (port) => {
 
 
 
-var openService = async(port, register_packet_router_func, private_key, cert, ca) => {
+var OpenService = async(port, register_packet_router_func, private_key, cert, ca) => {
 
 	initExpress(register_packet_router_func);	
 
-	if(util.isNotNull(private_key) && util.isNotNull(cert) && util.isNotNull(ca)) {
-		return await openHttpsService(port, private_key, cert, ca);
+	if(Util.IsNullOrEmpty(private_key) && Util.IsNullOrEmpty(cert) && Util.IsNullOrEmpty(ca)) {
+		return await openHttpService(Number(port));
 	}
 	else {
-		return await openHttpService(port);
+		return await openHttpsService(Number(port), private_key, cert, ca);
 	}
 }
 
@@ -102,5 +102,5 @@ var openService = async(port, register_packet_router_func, private_key, cert, ca
 
 
 module.exports = {
-	openService : openService
+	OpenService : OpenService
 }

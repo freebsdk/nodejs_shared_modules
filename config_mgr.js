@@ -1,9 +1,5 @@
-//
-// Created by freebsdk. 
-//
-
 var fs = require('fs');
-var MySQLMgr = require('./mysql_mgr.js');
+var DbContextMgr = require('./mysql_mgr.js');
 var Util = require('./util.js');
 
 
@@ -107,15 +103,15 @@ var GetValue = (key) => {
 
 
 
-var InitDBPool = (dsn_key) => {
-    var dsn = GetValue(dsn_key);
+var InitDBPool = (dsnKey) => {
+    var dsn = GetValue(dsnKey);
     if(typeof dsn == 'undefined') {
-        console.error("Not defined config property : "+dsn_key);
-        process.exit(-2);
+        console.error("Not defined config property : "+dsnKey);
+        process.exit(-1);
     }
 
     try {
-        MySQLMgr.open(dsn);
+        DbContextMgr.Open(dsn);
     }
     catch(error) {
         console.error(error);
@@ -127,15 +123,15 @@ var InitDBPool = (dsn_key) => {
 
 
 
-var LoadConfigFromDB = async(config_db_name) => {
-    var records = await MySQLMgr.exec(config_db_name, "SELECT keyname,`value` FROM tbl_common_cfg", []);
+var LoadConfigFromDBAsync = async(configDbName) => {
+    var records = await DbContextMgr.Exec(configDbName, "SELECT cfg_key,cfg_val FROM tbl_common_config", []);
 
     for(var i=0; i<records.rows.length;i++) {
         var record = records.rows[i];
         
-        // Do not replace properties from the config file.
-        if(Util.isNullOrEmpty(global.config[record.keyname])) {
-            global.config[record.keyname] = record.value;
+        // Do not replace exist properties from the config file.
+        if(Util.IsNullOrEmpty(global.config[record.cfg_key])) {
+            global.config[record.cfg_key] = record.cfg_val;
         }
     }
 }
@@ -154,5 +150,5 @@ module.exports = {
     
     LoadConsoleParamsIntoConfig : LoadConsoleParamsIntoConfig,
     LoadFromFile : LoadFromFile,
-    LoadConfigFromDB : LoadConfigFromDB
+    LoadConfigFromDBAsync : LoadConfigFromDBAsync
 }

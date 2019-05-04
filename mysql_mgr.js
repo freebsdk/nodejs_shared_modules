@@ -1,48 +1,32 @@
-//
-// Created by freebsdk. 
-//
-
 var Mysql = require('mysql');
-var ConfigMgr = require('./config_mgr.js');
 var Util = require('./util.js');
 
 
 
-const DEFAULT_MYSQL_PORT = 3306;
-const DEFAULT_CONNECTION_LIMIT = 5;
+
+global.dbhPool = {};
 
 
 
 
-global.dbh_pool = {};
 
+var Open = (dsn) => {
 
-
-var open = (dsn) => {
-
-    //optional parameters
-    if(!Util.isNullOrEmpty(dsn.connectionTimeout)) {
-        dsn['connectTimeout'] = dsn.connectionTimeout;
-    }
-
-    if(!Util.isNullOrEmpty(dsn.multipleStatement)) {
-        dsn['multipleStatements'] = dsn.multipleStatement;
-    }
-
-    if(Util.isNullOrEmpty(dsn.timezone) == false) {
-        dsn['timezone'] = dsn.timezone;
+    var handle = global.dbhPool[dsn.database];
+    if(!Util.IsNullOrEmpty(handle)) {
+        console.error("[!] Already registered db key : "+dbKey);
+        return { error : "duplicate_db_key" };
     }
 
     try {
         var dbh = Mysql.createPool(dsn);
+        global.dbhPool[dsn.database] = dbh;
     }
     catch(error) {
         console.error(error);
         return { error : 'db_connect_fail' }
     }
     
-    global.dbh_pool[dsn.database] = dbh;
-
     return { error : "ok" }
 }
 
@@ -50,9 +34,9 @@ var open = (dsn) => {
 
 
 
-var exec = (db_key, query, value) => {
+var Exec = (dbKey, query, value) => {
     return new Promise((resolve, reject) => {
-        var the_pool = global.dbh_pool[db_key];
+        var the_pool = global.dbhPool[dbKey];
         if(typeof the_pool == 'undefined') {
             reject({error : 'not_exist_handle'});
             return;
@@ -60,14 +44,14 @@ var exec = (db_key, query, value) => {
 
         the_pool.getConnection((err, connection) => {
             if(err != null) {
-                Util.timeError(__filename, __line, err);
+                Util.TimeError(__filename, __line, err);
                 reject({error : err});
                 return;
             }
             else {
                 connection.query(query, value, (err, rows) => {
                     if(err != null) {
-                        Util.timeError(__filename, __line, err);
+                        Util.TimeError(__filename, __line, err);
                         reject({error :err});
                         return;
                     }
@@ -88,6 +72,6 @@ var exec = (db_key, query, value) => {
 
 
 module.exports = {
-    open : open,
-    exec : exec
+    Open : Open,
+    Exec : Exec
 }

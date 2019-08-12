@@ -10,10 +10,9 @@ require('console-stamp')(console, '[yyyy-mm-dd HH:MM:ss.l]');
 
 
 
-var IsNullOrEmpty = (x) => {
+var IsUndefinedOrNull = (x) => {
     if(typeof x == 'undefined') return true;
     if(x == null) return true;
-    if(x.length == 0) return true;
 
     return false;
 }
@@ -22,7 +21,7 @@ var IsNullOrEmpty = (x) => {
 
 
 var ValueWithFallback = (source_val, fallback_val) => {
-    if(IsNullOrEmpty(source_val)) {
+    if(IsUndefinedOrNull(source_val)) {
         return fallback_val;
     }
     return source_val;
@@ -34,7 +33,7 @@ var ValueWithFallback = (source_val, fallback_val) => {
 
 var Trace = (filename, line, msg) =>{
     var show_msg = "[TRACE] "+filename+" (line: "+line+")";
-    if(IsNullOrEmpty(msg) == false) {
+    if(IsUndefinedOrNull(msg) == false || msg.length < 1) {
         show_msg += " > "+msg;
     }
     console.error(show_msg);
@@ -112,7 +111,7 @@ var SyncSleep = function(msec) {
 
 //network
 var IsValidPort = (port) => {
-    if(IsNullOrEmpty(port)) return false;
+    if(IsUndefinedOrNull(port)) return false;
     if(port >= 1 && port <= 65535) return true;
     return false;
 }
@@ -179,7 +178,7 @@ function Seperate3Digit(num) {
 
 
 module.exports = {
-    IsNullOrEmpty : IsNullOrEmpty,
+    IsUndefinedOrNull : IsUndefinedOrNull,
     ValueWithFallback : ValueWithFallback,
     Seperate3Digit : Seperate3Digit,
 
